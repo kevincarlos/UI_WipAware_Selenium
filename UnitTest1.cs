@@ -14,7 +14,8 @@ namespace UI_WipAware
     {
         private const string Url = "http://localhost/Expert_Local/ApplicationServices/WIPAware/";
         private const string WindowTitle = "WIP Aware";
-        private const int Seconds = 180;
+        private const int Timeout = 180;
+        private const int PollTime = 1;
         protected static IWebDriver WipAwareDriver;
         protected static IWebElement WebElement;
         protected static WebDriverWait WebdriverWait;
@@ -30,8 +31,8 @@ namespace UI_WipAware
             WipAwareDriver.Manage().Window.Maximize();
 
             DefaultWait<IWebDriver> fluentWait = new DefaultWait<IWebDriver>(WipAwareDriver);
-            fluentWait.Timeout = TimeSpan.FromSeconds(Seconds);
-            fluentWait.PollingInterval = TimeSpan.FromMilliseconds(1000);
+            fluentWait.Timeout = TimeSpan.FromSeconds(Timeout);
+            fluentWait.PollingInterval = TimeSpan.FromSeconds(PollTime);
             fluentWait.Until(driver => driver.Title == WindowTitle);
         }
 
@@ -52,19 +53,19 @@ namespace UI_WipAware
         {
             Setup();
             //check if advance search is clickable (Explicit Wait) then click Advanced Search Button
-            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector(HeaderButtons.CSSAdvancedSearchButton), Seconds);
+            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector(HeaderButtons.CSSAdvancedSearchButton), Timeout);
             WipAwareDriver.FindElement(By.CssSelector(HeaderButtons.CSSAdvancedSearchButton)).Click();
 
             //wait if the client.matter element is available then click
-            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector(AdvancedFilter.CSSMatterIdSearchButton), Seconds);
+            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector(AdvancedFilter.CSSMatterIdSearchButton), Timeout);
             WipAwareDriver.FindElement(By.CssSelector(AdvancedFilter.CSSMatterIdSearchButton)).Click();
 
             //wait for the client.matter popup element is available then type Arden
-            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector(AdvancedFilter.CSSMatterIdPopUpInput), Seconds);
+            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector(AdvancedFilter.CSSMatterIdPopUpInput), Timeout);
             WipAwareDriver.FindElement(By.CssSelector(AdvancedFilter.CSSMatterIdPopUpInput)).SendKeys("Arden");
 
             //wait for the populated client.matter that was typed in
-            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector("#search-control-results > li:nth-child(2) > div > div"), Seconds);
+            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector("#search-control-results > li:nth-child(2) > div > div"), Timeout);
 
             //gets the count number of list under the dropdown
             var count = WipAwareDriver.FindElements(By.CssSelector("#search-control-results > li")).Count;
@@ -80,18 +81,18 @@ namespace UI_WipAware
                 }
             }
             //wait and assert if the matter selected in Arden General (1)
-            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector("#a-advanced-filter > div.a-advanced-filter-content > div > div:nth-child(1) > div > div.a-multiselect-container > div > div.a-multiselect-item-text > div.a-multiselect-item-secondarytext"), Seconds);
+            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector("#a-advanced-filter > div.a-advanced-filter-content > div > div:nth-child(1) > div > div.a-multiselect-container > div > div.a-multiselect-item-text > div.a-multiselect-item-secondarytext"), Timeout);
             string isGeneral = WipAwareDriver.FindElement(By.CssSelector("#a-advanced-filter > div.a-advanced-filter-content > div > div:nth-child(1) > div > div.a-multiselect-container > div > div.a-multiselect-item-text > div.a-multiselect-item-secondarytext"))
                 .Text;
             Assert.AreEqual(isGeneral, "General (1)", "Fail");
 
             //wait and click search button
-            WebDriverExtensions.WaitForElement(WipAwareDriver, By.XPath(AdvancedFilter.XpathSearchButton), Seconds);
+            WebDriverExtensions.WaitForElement(WipAwareDriver, By.XPath(AdvancedFilter.XpathSearchButton), Timeout);
             WipAwareDriver.FindElement(By.XPath(AdvancedFilter.XpathSearchButton)).Click();
 
             //wait for the results for Arden General (1) in the grid then get the values on the grid
             WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector
-                ("#actionGrid > div.k-grid-content.k-auto-scrollable > table > tbody > tr > td:nth-child(3) > div > div > div.a-row-item-content.a-linear-transition > div > div.a-primary-text > span:nth-child(2)"), Seconds);
+                ("#actionGrid > div.k-grid-content.k-auto-scrollable > table > tbody > tr > td:nth-child(3) > div > div > div.a-row-item-content.a-linear-transition > div > div.a-primary-text > span:nth-child(2)"), Timeout);
 
             var WipTotal = WipAwareDriver.FindElement(By.CssSelector("#actionGrid > div.k-grid-content.k-auto-scrollable > table > tbody > tr > td:nth-child(4) > span")).Text;
             var WipLessPrebill = WipAwareDriver.FindElement(By.CssSelector("#actionGrid > div.k-grid-content.k-auto-scrollable > table > tbody > tr > td:nth-child(5) > a")).Text;
@@ -102,7 +103,7 @@ namespace UI_WipAware
                 ("#actionGrid > div.k-grid-content.k-auto-scrollable > table > tbody > tr > td:nth-child(3) > div > div > div.a-row-item-content.a-linear-transition > div > div.a-primary-text > span:nth-child(2)")).Click();
 
             //wait for the popup window on the side then get the values to compare
-            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector("#smartForm-content > div > div:nth-child(4) > div > span.a-graph-title > span.a-summary-total-value"), Seconds);
+            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector("#smartForm-content > div > div:nth-child(4) > div > span.a-graph-title > span.a-summary-total-value"), Timeout);
 
             var SideWindowWipTotal = WipAwareDriver.FindElement(By.CssSelector("#smartForm-content > div > div:nth-child(4) > div > span.a-graph-title > span.a-summary-total-value")).Text;
             var SideWindowWipLessPrebill = WipAwareDriver.FindElement(By.CssSelector("#actionGrid > div.k-grid-content.k-auto-scrollable > table > tbody > tr > td:nth-child(5) > a")).Text;

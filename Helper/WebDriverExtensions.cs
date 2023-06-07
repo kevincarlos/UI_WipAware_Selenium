@@ -8,9 +8,9 @@ namespace UI_WipAware
     public static class WebDriverExtensions
     {
         private static WebDriverWait Wait;
-        public static void WaitForElement(IWebDriver driver, By by, int timeoutInSeconds)
+        public static void WaitForElement(IWebDriver driver, By by, int timeoutInTimeout)
         {
-            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
+            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInTimeout));
             var element = wait.Until(condition =>
             {
                 try
@@ -35,9 +35,9 @@ namespace UI_WipAware
 
         }
 
-        //public static void IsEnabled(IWebDriver driver, By by, int timeoutInSeconds)
+        //public static void IsEnabled(IWebDriver driver, By by, int timeoutInTimeout)
         //{
-        //    Wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
+        //    Wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInTimeout));
 
         //    //create the condition about search button being enabled
         //    Func<IWebDriver, bool> isEnabled =
