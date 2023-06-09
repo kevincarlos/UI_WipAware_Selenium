@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Support.UI;
 using System;
 using SeleniumExtras.WaitHelpers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UI_WipAware
 {
@@ -35,22 +36,22 @@ namespace UI_WipAware
 
         }
 
-        //public static void IsEnabled(IWebDriver driver, By by, int timeoutInTimeout)
-        //{
-        //    Wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInTimeout));
 
-        //    //create the condition about search button being enabled
-        //    Func<IWebDriver, bool> isEnabled =
-        //          d =>
-        //          {
-        //              IWebElement e = d.FindElement(by);
-        //              return e.Displayed && e.Enabled;
-        //          };
-            
-        //    //wait until the search button is displayed and enabled
-        //    Wait.Until(isEnabled);
-            
-        //}
+        public static void TakeScreenshot(IWebDriver driver)
+        {
+            Screenshot ss = ((ITakesScreenshot)driver).GetScreenshot();
+            ss.SaveAsFile(@"C:\Temp\Download\Image.png",
+                ScreenshotImageFormat.Png);
+        }
+        public static void AssertFailScreenshot(IWebDriver driver, string one, string two)
+        {
+            Screenshot ss = ((ITakesScreenshot)driver).GetScreenshot();
+            ss.SaveAsFile(@"C:\Temp\Download\Image.png",
+                ScreenshotImageFormat.Png);
+
+            Assert.AreEqual(one, two, "Fail");
+        }
+
 
 
     }

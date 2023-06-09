@@ -24,8 +24,8 @@ namespace UI_WipAware
 
         public void Setup()
         {
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
+            //ChromeOptions option = new ChromeOptions();
+            //option.AddArgument("--headless");
             WipAwareDriver = new ChromeDriver();
             WipAwareDriver.Navigate().GoToUrl(Url);
             WipAwareDriver.Manage().Window.Maximize();
@@ -34,6 +34,7 @@ namespace UI_WipAware
             fluentWait.Timeout = TimeSpan.FromSeconds(Timeout);
             fluentWait.PollingInterval = TimeSpan.FromSeconds(PollTime);
             fluentWait.Until(driver => driver.Title == WindowTitle);
+
         }
 
         public void Stop()
@@ -48,7 +49,9 @@ namespace UI_WipAware
         }
 
         [TestMethod]
-        [Description("This will trigger an Advanced Search for Arden Industries in the client.matter field and select General(1) as the matter and compare the results of WipTotal, WipLessPrebill and ARtotal in the Bill Summary")]
+        [Description("This will trigger an Advanced Search for Arden Industries in the client.matter field " +
+                    "and select General(1) as the matter and compare the results of WipTotal, WipLessPrebill " +
+                    "and ARtotal in the Bill Summary")]
         public void AdvanceSearch()
         {
             Setup();
@@ -105,14 +108,19 @@ namespace UI_WipAware
             //wait for the popup window on the side then get the values to compare
             WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector("#smartForm-content > div > div:nth-child(4) > div > span.a-graph-title > span.a-summary-total-value"), Timeout);
 
+            //var SideWindowWipTotal = "test";
             var SideWindowWipTotal = WipAwareDriver.FindElement(By.CssSelector("#smartForm-content > div > div:nth-child(4) > div > span.a-graph-title > span.a-summary-total-value")).Text;
             var SideWindowWipLessPrebill = WipAwareDriver.FindElement(By.CssSelector("#actionGrid > div.k-grid-content.k-auto-scrollable > table > tbody > tr > td:nth-child(5) > a")).Text;
             var SideWindowARtotal = WipAwareDriver.FindElement(By.CssSelector("#actionGrid > div.k-grid-content.k-auto-scrollable > table > tbody > tr > td:nth-child(8) > span")).Text;
 
+            //Screenshot
+            //WebDriverExtensions.TakeScreenshot(WipAwareDriver);
+
             //compare values using assertion
-            Assert.AreEqual(SideWindowWipTotal, WipTotal, "Fail");
-            Assert.AreEqual(SideWindowWipLessPrebill, WipLessPrebill, "Fail");
-            Assert.AreEqual(SideWindowARtotal, ARtotal, "Fail");
+            WebDriverExtensions.AssertFailScreenshot(WipAwareDriver, SideWindowWipTotal, WipTotal);
+            WebDriverExtensions.AssertFailScreenshot(WipAwareDriver,SideWindowWipLessPrebill, WipLessPrebill);
+            WebDriverExtensions.AssertFailScreenshot(WipAwareDriver,SideWindowARtotal, ARtotal);
+            //Assert.AreEqual(SideWindowARtotal, ARtotal, "Fail");
 
             //sleep then close driver
             //Thread.Sleep(3000);

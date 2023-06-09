@@ -18,8 +18,5 @@ namespace UI_WipAware.Elements
         public const string NAMEMatterResponsibleEmployee = "MatterResponsibleEmployee";
         public const string XpathSearchButton = "//*[@id=\"a-advanced-filter\"]/div[2]/div/button[4]";
         public const string CSSSearchButton = "#a-advanced-filter > div.a-header.a-advanced-filter-toolbar > div > button.a-button.a-primary.a-search-apply-button";
-
-
-
     }
 }
