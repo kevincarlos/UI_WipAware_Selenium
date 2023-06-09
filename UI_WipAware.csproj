@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Elements\AdvancedFilter.cs" />
+    <Compile Include="Elements\AdvancedSearchResults.cs" />
+    <Compile Include="Elements\MatterSummary.cs" />
     <Compile Include="Elements\HeaderButtons.cs" />
     <Compile Include="Helper\WebDriverExtensions.cs" />
     <Compile Include="UnitTest1.cs" />

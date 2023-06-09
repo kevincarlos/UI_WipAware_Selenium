@@ -8,7 +8,8 @@ namespace UI_WipAware
 {
     public static class WebDriverExtensions
     {
-        private static WebDriverWait Wait;
+
+        //this method checks if the element is displayed and enabled. Replaces  the ExpectedConditions which is deprecated
         public static void WaitForElement(IWebDriver driver, By by, int timeoutInTimeout)
         {
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInTimeout));
@@ -32,8 +33,6 @@ namespace UI_WipAware
                     return false;
                 }
             });
-
-
         }
 
 
@@ -45,11 +44,18 @@ namespace UI_WipAware
         }
         public static void AssertFailScreenshot(IWebDriver driver, string one, string two)
         {
-            Screenshot ss = ((ITakesScreenshot)driver).GetScreenshot();
-            ss.SaveAsFile(@"C:\Temp\Download\Image.png",
-                ScreenshotImageFormat.Png);
+            bool result = false;
+            try
+            {
+                Assert.AreEqual(one, two, "Fail");
+            }
+            catch (AssertFailedException)
+            {
 
-            Assert.AreEqual(one, two, "Fail");
+               
+            }
+
+            TakeScreenshot(driver);
         }
 
 

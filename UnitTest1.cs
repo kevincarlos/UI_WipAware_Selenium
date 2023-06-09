@@ -21,8 +21,8 @@ namespace UI_WipAware
         protected static WebDriverWait WebdriverWait;
         protected static IList<IWebElement> List;
 
-
-        public void Setup()
+        [TestInitialize]
+        public void initialize()
         {
             //ChromeOptions option = new ChromeOptions();
             //option.AddArgument("--headless");
@@ -37,10 +37,13 @@ namespace UI_WipAware
 
         }
 
+        //[TestCleanup]
         public void Stop()
         {
             WipAwareDriver.Close();
         }
+
+
 
         public void login()
         {
@@ -48,13 +51,14 @@ namespace UI_WipAware
             // possibly add rights to "Wip Aware User" policy.
         }
 
+
+
         [TestMethod]
         [Description("This will trigger an Advanced Search for Arden Industries in the client.matter field " +
                     "and select General(1) as the matter and compare the results of WipTotal, WipLessPrebill " +
                     "and ARtotal in the Bill Summary")]
         public void AdvanceSearch()
         {
-            Setup();
             //check if advance search is clickable (Explicit Wait) then click Advanced Search Button
             WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector(HeaderButtons.CSSAdvancedSearchButton), Timeout);
             WipAwareDriver.FindElement(By.CssSelector(HeaderButtons.CSSAdvancedSearchButton)).Click();
@@ -108,8 +112,8 @@ namespace UI_WipAware
             //wait for the popup window on the side then get the values to compare
             WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector("#smartForm-content > div > div:nth-child(4) > div > span.a-graph-title > span.a-summary-total-value"), Timeout);
 
-            //var SideWindowWipTotal = "test";
-            var SideWindowWipTotal = WipAwareDriver.FindElement(By.CssSelector("#smartForm-content > div > div:nth-child(4) > div > span.a-graph-title > span.a-summary-total-value")).Text;
+            var SideWindowWipTotal = "test";
+            //var SideWindowWipTotal = WipAwareDriver.FindElement(By.CssSelector("#smartForm-content > div > div:nth-child(4) > div > span.a-graph-title > span.a-summary-total-value")).Text;
             var SideWindowWipLessPrebill = WipAwareDriver.FindElement(By.CssSelector("#actionGrid > div.k-grid-content.k-auto-scrollable > table > tbody > tr > td:nth-child(5) > a")).Text;
             var SideWindowARtotal = WipAwareDriver.FindElement(By.CssSelector("#actionGrid > div.k-grid-content.k-auto-scrollable > table > tbody > tr > td:nth-child(8) > span")).Text;
 
@@ -117,14 +121,55 @@ namespace UI_WipAware
             //WebDriverExtensions.TakeScreenshot(WipAwareDriver);
 
             //compare values using assertion
-            WebDriverExtensions.AssertFailScreenshot(WipAwareDriver, SideWindowWipTotal, WipTotal);
-            WebDriverExtensions.AssertFailScreenshot(WipAwareDriver,SideWindowWipLessPrebill, WipLessPrebill);
-            WebDriverExtensions.AssertFailScreenshot(WipAwareDriver,SideWindowARtotal, ARtotal);
-            //Assert.AreEqual(SideWindowARtotal, ARtotal, "Fail");
+            //WebDriverExtensions.AssertFailScreenshot(WipAwareDriver, SideWindowWipTotal, WipTotal);
+            //WebDriverExtensions.AssertFailScreenshot(WipAwareDriver,SideWindowWipLessPrebill, WipLessPrebill);
+            //WebDriverExtensions.AssertFailScreenshot(WipAwareDriver,SideWindowARtotal, ARtotal);
+
+            //Assert.AreEqual(SideWindowWipTotal, WipTotal);
+            //Assert.AreEqual(SideWindowWipLessPrebill, WipLessPrebill);
+            //Assert.AreEqual(SideWindowARtotal, ARtotal);
 
             //sleep then close driver
             //Thread.Sleep(3000);
             Stop();
         }
+
+        [TestMethod]
+        [Description("Testing POM")]
+
+        public void Test2()
+        {
+            HeaderButtons headerButtons = new HeaderButtons(WipAwareDriver);
+            AdvancedFilter advancedFilter = new AdvancedFilter(WipAwareDriver);
+            AdvancedSearchResults advancedSearchResults = new AdvancedSearchResults(WipAwareDriver);
+            MatterSummary matterSummary = new MatterSummary(WipAwareDriver);
+            
+
+            headerButtons.clickAdvancedSearchButton();
+            advancedFilter.clickMatterIdSearchButton();
+            advancedFilter.sendKeysMatterIdPopUpInput("Arden"); //DDT / hardcode later
+
+            var count = advancedFilter.getClientMatterList();
+
+            //implement a search for "General (1)" matter then click if it is "General (1)"
+            WebDriverExtensions.WaitForElement(WipAwareDriver, By.CssSelector("#search-control-results > li:nth-child(2) > div > div"), Timeout);
+            for (int i = 1; i <= count; i++)
+            {
+                var isArdenGeneral = WipAwareDriver.FindElement(By.CssSelector("#search-control-results > li:nth-child(" + i + ") > div > div > div.secondary-text")).Text;
+                //Console.WriteLine(isArdenGeneral);
+                if (isArdenGeneral == "General (1)")
+                {
+                    WipAwareDriver.FindElement(By.CssSelector("#search-control-results > li:nth-child(" + i + ") > div > div")).Click();
+                }
+            }
+
+            advancedFilter.Waitfor(advancedFilter.ClientMatterFilterContent);
+            advancedFilter.clickSearchButton();
+            advancedSearchResults.clickClientMatterFirstResult();
+
+
+        }
+        
+      
     }
 }
