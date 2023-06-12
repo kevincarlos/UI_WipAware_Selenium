@@ -64,6 +64,7 @@
     <Compile Include="Elements\MatterSummary.cs" />
     <Compile Include="Elements\HeaderButtons.cs" />
     <Compile Include="Helper\WebDriverExtensions.cs" />
+    <Compile Include="SearchControl\SearchResult.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -72,6 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="drivers\chromedriver.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
